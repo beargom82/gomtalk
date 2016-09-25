@@ -1,0 +1,34 @@
+[GomTalk]
+2016-08-15
+content://com.android.contacts/contacts/lookup/3958i7e013fb608ccf03a/481
+
+2015-06-22================================================================
+ensureThreadId() 구현
+send버튼 누르면 Sms message 생성, message list refresh 구현
+conversation view 진출입 anim추가
+
+
+
+2015-06-15================================================================
+thread 임의 생성, ConversationList표시 구현
+
+
+
+2015-06-13================================================================
+2차 컨셉
+!!즉시 사진 공유를 빨리 할 수 있도록 하기(촬영,갤러리)
+ConversationList에서 new버튼과 사진촬영, 갤러리 버튼 추가
+Conversaion item에 사진촬영, 갤러리 버튼 추가
+- recent이미지 표시하기 : 좌우 스크롤, 드래그, 롱프레스 하면 크게 띄우고 드래그 시작하면 반투명
+
+2015-06-07================================================================
+1차 컨셉
+단순 activity 구조
+- ConversationList > ConverstionView
+
+-- ConversationList 
+	- actionbar 아이콘으로 new message실행
+	- ConverastionList
+
+
++ new message아이콘 필요
