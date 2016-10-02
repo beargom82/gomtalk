@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 /**
  * Created by kdw on 2015-10-11.
  */
-public class GomTalkFragmentBase extends Fragment {
+public abstract class GomTalkFragmentBase extends Fragment {
     private String mTag;
 
     public GomTalkFragmentBase() {
@@ -76,8 +76,9 @@ public class GomTalkFragmentBase extends Fragment {
 
     @Override
     public void onDestroy() {
-        Log.i(mTag, "onDestroy()");
+        Log.i(mTag, "release()");
         super.onDestroy();
+        releasePresenter();
     }
 
     @Override
@@ -115,4 +116,26 @@ public class GomTalkFragmentBase extends Fragment {
         Log.i(mTag, "onDetach()");
         super.onDetach();
     }
+
+    /**
+     * setup View object that will be used by Presenter of MVP pattern
+     */
+    protected abstract void setupMvpView();
+
+    /**
+     * Creates Presenter instance and connect to Model and Presenter
+     * Must be called very first of onCreate() or onActivityCreated()
+     */
+    public abstract void setupMvpPresenter();
+
+    /**
+     * start Presenter of MVP pattern
+     */
+    protected abstract void startMvpPresenter();
+
+    /**
+     * Releases Presenter
+     * Must be called in release()
+     */
+    public abstract void releasePresenter();
 }

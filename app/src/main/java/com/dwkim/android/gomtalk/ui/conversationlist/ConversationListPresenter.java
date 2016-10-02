@@ -1,5 +1,6 @@
 package com.dwkim.android.gomtalk.ui.conversationlist;
 
+import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 
@@ -12,32 +13,35 @@ import com.dwkim.android.gomtalk.model.ModelCallback;
 public class ConversationListPresenter implements ConversationListContract.Presenter {
     private final ConversationListModel mModel;
     private final ConversationListContract.View mView;
-    private final Context mContext;
 
-    public ConversationListPresenter(Context context
-            , ConversationListModel model
+    public ConversationListPresenter(ConversationListModel model
             , ConversationListContract.View view) {
-        mContext = context;
         mModel = model;
         mView = view;
-
-        mModel.bind(mModelCallback);
+        mView.setPresenter(this);
     }
 
     @Override
-    public void loadConversationList() {
-        mModel.queryConversationList(mContext);
+    public void loadConversationList(Context context) {
+        mModel.queryConversationList(context, new ModelCallback(){
+            @Override
+            public void onComplete(int resultCode, int errorCode, Object data) {
+                mView.showConversationList((Cursor) data);
+            }
+        });
     }
 
     @Override
-    public void onDestroy() {
-        mModel.unbind();
+    public void release() {
     }
 
-    private ModelCallback mModelCallback = new ModelCallback() {
-        @Override
-        public void onComplete(Object data) {
-            mView.showConversationList((Cursor)data);
-        }
-    };
+    @Override
+    public void start(Context context) {
+        loadConversationList(context);
+    }
+
+    @Override
+    public void onConversationItemClick(Activity activity, long conversationId) {
+
+    }
 }

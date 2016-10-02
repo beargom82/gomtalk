@@ -16,28 +16,23 @@ public class ConversationListModel {
     private ModelCallback mCallback;
     private QueryConversationListTask mQueryConversationListTask;
 
-    public void bind(ModelCallback callback) {
-        mCallback = callback;
-    }
-
-    public void unbind() {
-        mCallback = null;
-        cancelQueryConversationListTask();
-    }
-
     private void cancelQueryConversationListTask() {
         if(mQueryConversationListTask != null) {
             mQueryConversationListTask.cancel(false);
         }
     }
 
-    public void queryConversationList(Context context) {
+    public void queryConversationList(Context context, ModelCallback modelCallback) {
         cancelQueryConversationListTask();
-        mQueryConversationListTask = new QueryConversationListTask();
+        mQueryConversationListTask = new QueryConversationListTask(modelCallback);
         mQueryConversationListTask.execute(context);
     }
 
     private class QueryConversationListTask extends AsyncTask<Context, Object, Cursor> {
+        private ModelCallback mCallback;
+        public QueryConversationListTask(ModelCallback modelCallback) {
+            mCallback = modelCallback;
+        }
 
         @Override
         protected Cursor doInBackground(Context... params) {
@@ -51,9 +46,7 @@ public class ConversationListModel {
         protected void onPostExecute(Cursor cursor) {
             super.onPostExecute(cursor);
 
-            if(mCallback != null) {
-                mCallback.onComplete(cursor);
-            }
+            mCallback.onComplete(ModelCallback.RESULT_OK, ModelCallback.ERRORCODE_NONE, cursor);
         }
     }
 }
