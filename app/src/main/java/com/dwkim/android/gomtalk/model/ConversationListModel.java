@@ -13,8 +13,13 @@ import com.example.dwkim.gomtalk.provider.GomTalkProviderContract;
 public class ConversationListModel {
     private static final Uri URI_CONVERSATION_LIST = GomTalkProviderContract.Threads.CONTENT_URI;
     private static final String DEFAULT_SORT_ORDER = GomTalkProviderContract.Threads.DATE + " DESC";
+    private final Context mContext;
     private ModelCallback mCallback;
     private QueryConversationListTask mQueryConversationListTask;
+
+    public ConversationListModel(Context context) {
+        mContext = context;
+    }
 
     private void cancelQueryConversationListTask() {
         if(mQueryConversationListTask != null) {
@@ -22,10 +27,10 @@ public class ConversationListModel {
         }
     }
 
-    public void queryConversationList(Context context, ModelCallback modelCallback) {
+    public void queryConversationList(ModelCallback modelCallback) {
         cancelQueryConversationListTask();
         mQueryConversationListTask = new QueryConversationListTask(modelCallback);
-        mQueryConversationListTask.execute(context);
+        mQueryConversationListTask.execute(mContext);
     }
 
     private class QueryConversationListTask extends AsyncTask<Context, Object, Cursor> {

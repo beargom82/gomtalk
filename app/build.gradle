@@ -5,12 +5,14 @@ android {
     buildToolsVersion "23.0.1"
 
     defaultConfig {
-        applicationId "com.example.dwkim.gomtalk"
+        applicationId "com.dwkim.android.gomtalk"
         minSdkVersion 21
         targetSdkVersion 21
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner 'android.test.InstrumentationTestRunner'
+        //testInstrumentationRunner 'android.test.InstrumentationTestRunner'
+//        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
     }
     buildTypes {
         release {
@@ -18,8 +20,32 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
 }
+
+def powerMockVersion =  '1.6.2'
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    // Dependencies for local unit tests
+    testCompile "junit:junit:$rootProject.ext.junitVersion"
+    testCompile "org.mockito:mockito-all:$rootProject.ext.mockitoVersion"
+    testCompile "org.hamcrest:hamcrest-all:$rootProject.ext.hamcrestVersion"
+
+    // Robolectric
+//    testCompile 'junit:junit:4.12'
+//    testCompile 'org.hamcrest:hamcrest-core:1.1'
+//    testCompile 'org.hamcrest:hamcrest-library:1.1'
+//    testCompile 'org.hamcrest:hamcrest-integration:1.1'
+//    testCompile 'org.robolectric:robolectric:3.0-rc3'
+//
+//    // PowerMock
+//    testCompile "org.powermock:powermock-module-junit4:$powerMockVersion"
+//    testCompile "org.powermock:powermock-module-junit4-rule:$powerMockVersion"
+//    testCompile "org.powermock:powermock-api-mockito:$powerMockVersion"
+//    testCompile "org.powermock:powermock-classloading-xstream:$powerMockVersion"
 }

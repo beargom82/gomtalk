@@ -22,8 +22,8 @@ public class ConversationListPresenter implements ConversationListContract.Prese
     }
 
     @Override
-    public void loadConversationList(Context context) {
-        mModel.queryConversationList(context, new ModelCallback(){
+    public void loadConversationList() {
+        mModel.queryConversationList(new ModelCallback(){
             @Override
             public void onComplete(int resultCode, int errorCode, Object data) {
                 mView.showConversationList((Cursor) data);
@@ -37,7 +37,7 @@ public class ConversationListPresenter implements ConversationListContract.Prese
 
     @Override
     public void start(Context context) {
-        loadConversationList(context);
+        loadConversationList();
     }
 
     @Override

@@ -15,7 +15,7 @@ public class ConversationListContract {
     }
 
     public interface Presenter {
-        void loadConversationList(Context context);
+        void loadConversationList();
 
         void release();
 

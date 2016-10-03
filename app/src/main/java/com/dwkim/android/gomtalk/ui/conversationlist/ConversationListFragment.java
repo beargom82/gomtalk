@@ -106,7 +106,7 @@ public class ConversationListFragment extends GomTalkFragmentBase {
     @Override
     public void setupMvpPresenter() {
         mMvpPresenter = new ConversationListPresenter(
-                new ConversationListModel()
+                new ConversationListModel(null)
                 , mMvpView);
     }
 
