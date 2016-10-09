@@ -12,6 +12,8 @@ public class ConversationListContract {
         void showConversationList(Cursor cursor);
 
         void setPresenter(Presenter presenter);
+
+        void openConversation(long conversationId);
     }
 
     public interface Presenter {
@@ -19,8 +21,8 @@ public class ConversationListContract {
 
         void release();
 
-        void start(Context context);
+        void start();
 
-        void onConversationItemClick(Activity activity, long conversationId);
+        void openConversation(long conversationId);
     }
 }

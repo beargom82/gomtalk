@@ -11,6 +11,7 @@ import android.widget.ListView;
 
 import com.dwkim.android.gomtalk.R;
 import com.dwkim.android.gomtalk.model.ConversationListModel;
+import com.dwkim.android.gomtalk.model.MessageStorage;
 import com.dwkim.android.gomtalk.ui.GomTalkFragmentBase;
 import com.example.dwkim.gomtalk.GomTalk;
 import com.example.dwkim.gomtalk.conversationview.ConversationViewFragment;
@@ -37,12 +38,13 @@ public class ConversationListFragment extends GomTalkFragmentBase {
 
         setupMvpView();
         setupMvpPresenter();
+
         startMvpPresenter();
     }
 
     @Override
     protected void startMvpPresenter() {
-        mMvpPresenter.start(getActivity());
+        mMvpPresenter.start();
     }
 
     @Override
@@ -53,6 +55,7 @@ public class ConversationListFragment extends GomTalkFragmentBase {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        mMvpPresenter.release();
     }
 
     private class ConversationListViewImpl implements ConversationListContract.View {
@@ -77,14 +80,8 @@ public class ConversationListFragment extends GomTalkFragmentBase {
             mPresenter = presenter;
         }
 
-        private final AdapterView.OnItemClickListener mOnListItemClickListener = new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                openConversationView(id);
-            }
-        };
-
-        private void openConversationView(long conversationId) {
+        @Override
+        public void openConversation(long conversationId) {
             ConversationViewFragment fragment = new ConversationViewFragment();
             if(DBUtil.isValid(conversationId)) {
                 Bundle args = new Bundle();
@@ -101,12 +98,19 @@ public class ConversationListFragment extends GomTalkFragmentBase {
             transaction.addToBackStack(null);
             transaction.commit();
         }
+
+        private final AdapterView.OnItemClickListener mOnListItemClickListener = new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                mPresenter.openConversation(id);
+            }
+        };
     };
 
     @Override
     public void setupMvpPresenter() {
         mMvpPresenter = new ConversationListPresenter(
-                new ConversationListModel(null)
+                new ConversationListModel(new MessageStorage(getActivity()))
                 , mMvpView);
     }
 

@@ -1,4 +1,40 @@
 [GomTalk]
+2016-10-08
+ConversationList구현
+    - 리스트 표시M
+    - long press또는 메뉴로 selection mode
+    - 1건, 여러건 삭제(여러건이면 Progress dialog표시)
+
+[설계방침]================================================================
+UI는 MVP로
+MVP인터페이스는 Android와는 독립적으로
+사용자 입력은 V가 받고 실제 동작은 Presenter가 처리함
+ex) V.onClick() { P.doSomething() }
+
+계층
+    P
+    M V
+    Storage
+
+관계
+    P <> V
+    P > M (결과는 Callback으로)
+    V / M (서로 모름)
+Naming
+    인터페이스는 'I'로 시작
+    저장소 접근자는 000Storage로 끝
+
+- Callback은 동작 종류별로 세분화하여, 선언을 많이 하더라도 general한 Callback 1개를 쓰는 경우보다 Flow를 따라가기 쉽게 함
+    ex) Callback -> ConversationListLoadCallback, ConversationDeleteCallbac
+    구현 편의를 위해 기본 버젼 1개 선언하고, 실 구현시에는 상속된 버젼을 사용함
+
+- Async여부는 Model에서 결정
+
+- 화면실행은 Presenter에 대표 Method를 가지고 있지만 실제 Activity, Fragment 실행은 View에서 구현
+  (Android에서 화면을 상징하는 Activity는 View의 일부로 간주함, 마찬가지로 Model에서 provider, service접근을 위한 Context를 사용)
+================================================================
+
+
 2016-08-15
 content://com.android.contacts/contacts/lookup/3958i7e013fb608ccf03a/481
 

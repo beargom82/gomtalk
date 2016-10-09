@@ -1,13 +1,9 @@
 package com.dwkim.android.gomtalk;
 
-import android.content.Context;
 import android.database.Cursor;
-import android.database.CursorWrapper;
 import android.database.MatrixCursor;
-import android.test.mock.MockCursor;
 
 import com.dwkim.android.gomtalk.model.ConversationListModel;
-import com.dwkim.android.gomtalk.model.ModelCallback;
 import com.dwkim.android.gomtalk.provider.GomTalkProviderContract;
 import com.dwkim.android.gomtalk.ui.conversationlist.ConversationListContract;
 import com.dwkim.android.gomtalk.ui.conversationlist.ConversationListPresenter;
@@ -20,7 +16,9 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class ConversationListTest {
 
@@ -34,7 +32,7 @@ public class ConversationListTest {
     ConversationListContract.View mMockView;
 
     @Captor
-    private ArgumentCaptor<ModelCallback> mModelCallbackCaptor;
+    private ArgumentCaptor<ConversationListModel.ConversationListLoadCallback> mConvLoadCallbackCaptor;
 
     private ConversationListPresenter mConversationListPresenter;
     private MatrixCursor mConversationListCursor;
@@ -45,20 +43,51 @@ public class ConversationListTest {
         // inject the mocks in the test the initMocks method needs to be called.
         MockitoAnnotations.initMocks(this);
 
-        mConversationListPresenter = new ConversationListPresenter(mMockModel, mMockView);
+        mConversationListPresenter = spy(new ConversationListPresenter(mMockModel, mMockView));
 
         mConversationListCursor = new MatrixCursor(new String[]{"_id","snippet"});
         mConversationListCursor.addRow(new Object[]{"1","abcd"});
+
+    }
+
+    @Test
+    public void start() {
+        mConversationListPresenter.start();
+
+        verify(mMockModel).loadConversationList(mConvLoadCallbackCaptor.capture());
+        mConvLoadCallbackCaptor.getValue().onConversationListLoaded(mConversationListCursor);
+
+        verify(mMockView).showConversationList(any(Cursor.class));
     }
 
     @Test
     public void loadConversationList() {
         mConversationListPresenter.loadConversationList();
 
-        verify(mMockModel).queryConversationList(mModelCallbackCaptor.capture());
-        mModelCallbackCaptor.getValue().onComplete(ModelCallback.RESULT_OK, 0, mConversationListCursor);
+        verify(mMockModel).loadConversationList(mConvLoadCallbackCaptor.capture());
+        mConvLoadCallbackCaptor.getValue().onConversationListLoaded(mConversationListCursor);
 
-        verify(mMockView).showConversationList(mConversationListCursor);
-//        verify(mMockView).showConversationList(any(Cursor.class));
+        verify(mMockView).showConversationList(any(Cursor.class));
     }
+
+    @Test
+    public void openConversation() {
+        mConversationListPresenter.openConversation(10l);
+
+        verify(mMockView).openConversation(10L);
+    }
+
+    /* old codes
+    //when(mMessageStorage.queryConversationList()).thenReturn(mConversationListCursor);
+
+//    public void loadConversationList_old() {
+//
+//        mConversationListPresenter.loadConversationList();
+//        mMockModel.onConversationListLoaded(mMessageStorage.queryConversationList());
+//
+//        verify(mMockModel).loadConversationList();
+//        verify(mMockView).showConversationList(any(Cursor.class));
+//    }
+
+     */
 }
